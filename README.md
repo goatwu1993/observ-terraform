@@ -1,4 +1,17 @@
-# Terraform modules
+# Observ platform - terraform deploy
+
+## How to use
+
+```bash
+terraform plan -var="image_tag=main" -out=out.tfplan
+
+... (input some information)
+
+terraform apply "out.tfplan"
+```
+
+- Please choose an unique suffix to avoid conflict
+- Web FCM API is optional
 
 ## Developing
 
