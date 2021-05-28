@@ -1,8 +1,21 @@
 # Observ platform - terraform deploy
 
+## Prerequisite
+
+- Either one of
+    - Azure Cloud Shell
+    - Bash with
+        - Helm
+        - Terraform
+- Azure account with permissions
+
 ## How to use
 
 ```bash
+git clone https://github.com/goatwu1993/observ-terraform.git
+
+cd /observ-terraform
+
 terraform plan -var="image_tag=main" -out=out.tfplan
 
 ... (input some information)
