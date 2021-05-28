@@ -14,7 +14,7 @@
 ```bash
 git clone https://github.com/goatwu1993/observ-terraform.git
 
-cd /observ-terraform
+cd /observ-terraform/setups
 
 terraform plan -var="image_tag=main" -out=out.tfplan
 
