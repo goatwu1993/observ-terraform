@@ -14,7 +14,9 @@
 ```bash
 git clone https://github.com/goatwu1993/observ-terraform.git
 
-cd /observ-terraform/setups
+cd observ-terraform/setups/observ-compose
+
+terraform init
 
 terraform plan -var="image_tag=main" -out=out.tfplan
 
@@ -23,7 +25,7 @@ terraform plan -var="image_tag=main" -out=out.tfplan
 terraform apply "out.tfplan"
 ```
 
-- Please choose an unique suffix to avoid conflict
+- Please choose an unique suffix to avoid conflict. Accept lowercase char only.
 - Web FCM API is optional
 
 ## Developing
