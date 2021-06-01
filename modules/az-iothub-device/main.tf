@@ -15,12 +15,12 @@ resource "null_resource" "device" {
 
   provisioner "local-exec" {
     when    = create
-    command = "az iot hub device-identity -l create --device-id ${self.triggers.device_id} ${var.edge_enabled ? "--edge-enabled" : ""} --hub-name ${self.triggers.iothub_name}"
+    command = "az iot hub device-identity create --device-id ${self.triggers.device_id} ${var.edge_enabled ? "--edge-enabled" : ""} --hub-name ${self.triggers.iothub_name}"
   }
 
   provisioner "local-exec" {
     when    = destroy
-    command = "az iot hub device-identity -l delete --device-id ${self.triggers.device_id} --hub-name ${self.triggers.iothub_name}"
+    command = "az iot hub device-identity delete --device-id ${self.triggers.device_id} --hub-name ${self.triggers.iothub_name}"
   }
 
   depends_on = [

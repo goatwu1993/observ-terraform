@@ -1,10 +1,6 @@
 variable "suffix" {
   description = "Suffix of all resources"
   type        = string
-  validation {
-    condition     = can(regex("^[a-z]+$", var.suffix))
-    error_message = "For the suffix value only a-z are allowed."
-  }
 }
 
 variable "rg_location" {

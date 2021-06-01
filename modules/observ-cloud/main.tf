@@ -60,93 +60,6 @@ resource "kubernetes_namespace" "this" {
   ]
 }
 
-resource "kubernetes_secret" "iothub" {
-  metadata {
-    name      = "iothub"
-    namespace = kubernetes_namespace.this.metadata[0].name
-  }
-
-  data = {
-    CONNECTION_STRING      = data.azurerm_iothub_shared_access_policy.this.primary_connection_string
-    DEVICE_ID              = var.iothub_device_id
-    LINEBOT_ACCESS_TOKEN   = var.linebot_access_token
-    LINEBOT_CHANNEL_SECRET = var.linebot_channel_secret
-  }
-  type = "Opaque"
-}
-
-resource "kubernetes_secret" "eventhub" {
-  metadata {
-    name      = "eventhub"
-    namespace = kubernetes_namespace.this.metadata[0].name
-  }
-
-  data = {
-    EVENTHUB_NAME              = var.eventhub_name
-    eventhub_consumer_group    = var.eventhub_consumer_group
-    EVENTHUB_CONNECTION_STRING = var.eventhub_connection_string
-  }
-  type = "Opaque"
-}
-
-resource "kubernetes_secret" "postgres" {
-  metadata {
-    name      = "postgres"
-    namespace = kubernetes_namespace.this.metadata[0].name
-  }
-
-  data = {
-    POSTGRES_HOST     = trimsuffix(data.azurerm_postgresql_server.this.fqdn, ".")
-    POSTGRES_PORT     = 5432
-    POSTGRES_USER     = "${postgresql_role.this.name}@${azurerm_postgresql_database.this.server_name}"
-    POSTGRES_DB       = azurerm_postgresql_database.this.name
-    POSTGRES_PASSWORD = postgresql_role.this.password
-  }
-  type = "Opaque"
-}
-
-resource "kubernetes_secret" "django" {
-  metadata {
-    name      = "django"
-    namespace = kubernetes_namespace.this.metadata[0].name
-  }
-
-  data = {
-    DJANGO_SECRET_KEY  = var.web_secret_key
-    AZURE_ACCOUNT_NAME = data.azurerm_storage_account.this.name
-    AZURE_CONTAINER    = azurerm_storage_container.this.name
-    AZURE_ACCOUNT_KEY  = data.azurerm_storage_account.this.primary_access_key
-    FCM_API_KEY        = var.web_fcm_api_key
-  }
-  type = "Opaque"
-}
-
-resource "kubernetes_secret" "django_admin" {
-  metadata {
-    name      = "django-admin"
-    namespace = kubernetes_namespace.this.metadata[0].name
-  }
-
-  data = {
-    DJANGO_SUPERUSER_EMAIL    = var.web_admin_email
-    DJANGO_SUPERUSER_PASSWORD = var.web_admin_password
-  }
-  type = "Opaque"
-}
-
-resource "kubernetes_config_map" "redis" {
-  metadata {
-    name      = "redis"
-    namespace = kubernetes_namespace.this.metadata[0].name
-  }
-
-  data = {
-    REDIS_HOST   = "redis"
-    REDIS_PORT   = 6379
-    REDIS_GPS_DB = 2
-  }
-}
-
 resource "kubernetes_secret" "acr_secret" {
   metadata {
     name      = "acr-secret"
@@ -209,17 +122,105 @@ resource "helm_release" "this" {
     value = kubernetes_secret.acr_secret.metadata[0].name
   }
 
+  set {
+    name  = "externalPostgresql.host"
+    value = trimsuffix(data.azurerm_postgresql_server.this.fqdn, ".")
+  }
+
+  set {
+    name  = "externalPostgresql.port"
+    value = 5432
+  }
+
+  set {
+    name  = "externalPostgresql.username"
+    value = "${postgresql_role.this.name}@${azurerm_postgresql_database.this.server_name}"
+  }
+
+  set {
+    name  = "externalPostgresql.password"
+    value = postgresql_role.this.password
+  }
+  set {
+    name  = "externalPostgresql.database"
+    value = azurerm_postgresql_database.this.name
+  }
+
+  set {
+    name  = "web.admin.email"
+    value = var.web_admin_email
+  }
+
+  set {
+    name  = "web.admin.password"
+    value = var.web_admin_password
+  }
+
+  set {
+    name  = "web.fcmApiKey"
+    value = var.web_fcm_api_key
+  }
+
+  set {
+    name  = "web.secretKey"
+    value = var.web_secret_key
+  }
+
+  set {
+    name  = "storage.azure.storageAccount"
+    value = data.azurerm_storage_account.this.name
+  }
+
+  set {
+    name  = "storage.azure.container"
+    value = azurerm_storage_container.this.name
+  }
+
+  set {
+    name  = "storage.azure.accountKey"
+    value = data.azurerm_storage_account.this.primary_access_key
+  }
+
+  set {
+    name  = "message.azure.iothub.connectionString"
+    value = data.azurerm_iothub_shared_access_policy.this.primary_connection_string
+  }
+
+  set {
+    name  = "message.azure.iothub.deviceId"
+    value = var.iothub_device_id
+  }
+
+  set {
+    name  = "message.azure.eventhub.name"
+    value = var.eventhub_name
+  }
+
+  set {
+    name  = "message.azure.eventhub.consumerGroup"
+    value = var.eventhub_consumer_group
+  }
+
+  set {
+    name  = "message.azure.eventhub.connectionString"
+    value = var.eventhub_connection_string
+  }
+
+  set {
+    name  = "lineBot.accessToken"
+    value = var.linebot_access_token
+  }
+
+  set {
+    name  = "lineBot.channelSecret"
+    value = var.linebot_channel_secret
+  }
+
   # Helm will read envFrom secret. However there is no way terraform to know
   # Explicitly declare depends on secrets.
   depends_on = [
     null_resource.download_chart,
     kubernetes_namespace.this,
-    kubernetes_secret.postgres,
-    kubernetes_secret.django,
-    kubernetes_secret.django_admin,
-    kubernetes_secret.iothub,
-    kubernetes_secret.eventhub,
-    kubernetes_config_map.redis,
     azurerm_postgresql_database.this
   ]
 }
