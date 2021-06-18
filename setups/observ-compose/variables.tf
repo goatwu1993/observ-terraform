@@ -1,6 +1,10 @@
 variable "suffix" {
   description = "Suffix of all resources"
   type        = string
+  validation {
+    condition     = can(regex("^[0-9a-z]+$", var.suffix))
+    error_message = "For the suffix value only a-z and 0-9 are allowed."
+  }
 }
 
 variable "rg_location" {
@@ -24,7 +28,7 @@ variable "pg_admin_login" {
 variable "pg_admin_login_password" {
   description = "Password of admin of Azure Database for Postgresql"
   type        = string
-  default     = "admin@123"
+  sensitive   = true
 }
 
 variable "pg_sku_name" {
@@ -45,9 +49,16 @@ variable "pg_storage_mb" {
   default     = 640000
 }
 
+variable "pg_db_password" {
+  description = "Password for database user"
+  type        = string
+  sensitive   = true
+}
+
 variable "image_tag" {
   description = "Tag of this project"
   type        = string
+  default     = "1.5.0"
 }
 
 variable "web_admin_email" {
@@ -58,6 +69,7 @@ variable "web_admin_email" {
 variable "web_admin_password" {
   description = "Web server admin password"
   type        = string
+  sensitive   = true
 }
 
 variable "web_fcm_api_key" {
@@ -74,13 +86,13 @@ variable "cr_server" {
 variable "cr_username" {
   description = "Username of existing private container registry"
   type        = string
-  default     = "e00d9f8e-5bd5-496f-af1c-eec1caf469e2"
+  default     = "fbf9b1ee-02b8-4452-ab7a-bdf16e47ae98"
 }
 
 variable "cr_password" {
   description = "Password of existing private container registry"
   type        = string
-  default     = "kVd6~Z4Rw~Epx53uH2Vtx~pbOmi7zsuyWM"
+  default     = "KNDTdJGVh8fyFWpa9DZD~.mW9tb38_IRxD"
 }
 
 variable "aks_edge_vm_size" {

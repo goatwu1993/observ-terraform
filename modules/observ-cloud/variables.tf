@@ -1,6 +1,10 @@
-variable "namespace" {
-  description = "Namespace of Kubernetes"
+variable "suffix" {
+  description = "Suffix of all resources"
   type        = string
+  validation {
+    condition     = can(regex("^[0-9a-z]+$", var.suffix))
+    error_message = "For the suffix value only a-z and 0-9 are allowed."
+  }
 }
 
 variable "image_tag" {
@@ -46,11 +50,6 @@ variable "storage_account_name" {
   type        = string
 }
 
-variable "storage_container_name" {
-  description = "Name of storage container"
-  type        = string
-}
-
 variable "iothub_name" {
   description = "Name of iothub"
   type        = string
@@ -91,44 +90,33 @@ variable "az_pg_server_rg" {
   type        = string
 }
 
-variable "az_pg_db_name" {
-  description = "Name of database of Azure PostgreSQL server"
-  type        = string
-}
-
-variable "az_pg_db_username" {
-  description = "Username of role with privilege granted to database of Azure PostgreSQL server"
-  type        = string
-}
-
 variable "az_pg_db_password" {
   description = "Password of role with privilege granted to database of Azure PostgreSQL server"
   type        = string
 }
 
-variable "az_pg_firewall_rule_name" {
-  description = "Firewall name of to allow terraform client connect to Azure PostgreSQL server"
+variable "eventhub_namespace" {
+  description = "EventHub namespace"
   type        = string
 }
 
-variable "helm_release_name" {
-  description = "Name of helm release"
+variable "eventhub_namespace_rg" {
+  description = "Resource group of EventHub namespace"
   type        = string
-  default     = ""
 }
 
-variable "eventhub_name" {
-  description = "EventHub name"
+variable "eventhub" {
+  description = "Name of EventHub"
   type        = string
 }
 
 variable "eventhub_consumer_group" {
-  description = "Name of EventHub Consumer group"
+  description = "Name of EventHub Consumer Group"
   type        = string
 }
 
-variable "eventhub_connection_string" {
-  description = "EventHub Connction String"
+variable "eventhub_authorization_rule" {
+  description = "Name of EventHub Authorization Rule"
   type        = string
 }
 

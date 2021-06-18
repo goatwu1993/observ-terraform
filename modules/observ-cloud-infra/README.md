@@ -1,14 +1,21 @@
-# Observ Cloud Infra
+# Observ Cloud Infrastructure
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+## Table of contents
+
+- [What is](#what-is)
+- [What it does](#what-it-does)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## What is
 
-This module deploy the infra structure needs for observ-cloud platform. Use when you create infra from zero and later deploy platform on it.
+This module contains the infrastructure required by observ-cloud platform.
 
 ## What it does
 
 - Create an Azure PostgreSQL server.
-- Create a storage account.
-- Create an AKS.
-- Create an IoTHub.
-
-and so on.
+- Create an Azure storage account.
+- Create an Azure Kubernetes Service(AKS).
+- Create an Azure IoTHub.

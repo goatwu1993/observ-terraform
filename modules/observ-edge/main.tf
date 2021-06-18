@@ -1,5 +1,5 @@
 resource "azurerm_media_services_account" "this" {
-  name                = var.ams_account_name
+  name                = local.media_services_account
   resource_group_name = data.azurerm_resource_group.this.name
   location            = data.azurerm_resource_group.this.location
 
@@ -18,7 +18,7 @@ resource "azurerm_media_services_account" "this" {
 }
 
 resource "azuread_application" "stream_agent" {
-  display_name = "stream_agent"
+  display_name = local.stream_agent_display_name
 
   required_resource_access {
     resource_app_id = "00000002-0000-0000-c000-000000000000"
@@ -43,7 +43,7 @@ resource "azuread_service_principal_password" "stream_agent" {
 
 resource "kubernetes_namespace" "this" {
   metadata {
-    name = "observ-${terraform.workspace}"
+    name = local.namespace
   }
 }
 
@@ -90,8 +90,8 @@ resource "kubernetes_secret" "eventhub" {
   }
 
   data = {
-    EVENTHUB_NAME              = var.eventhub_name
-    EVENTHUB_CONNECTION_STRING = var.eventhub_connection_string
+    EVENTHUB_NAME              = data.azurerm_eventhub.this.name
+    EVENTHUB_CONNECTION_STRING = data.azurerm_eventhub_authorization_rule.this.primary_connection_string
   }
   type = "Opaque"
 }
@@ -103,12 +103,16 @@ resource "kubernetes_config_map" "stream_agent" {
   }
 
   data = {
-    DEEPSTREAM     = "False"
-    WS_PATH        = "webrtc-server"
-    CENTERNET_HOST = "triton-server-centernet"
-    CENTERNET_PORT = "8000"
-    MMDET_HOST     = "triton-server-mmdet"
-    MMDET_PORT     = "8000"
+    DEEPSTREAM           = "False"
+    WS_PATH              = "webrtc-server"
+    CENTERNET_HOST       = "triton-server-centernet"
+    CENTERNET_PORT       = "8000"
+    MMDET_HOST           = "triton-server-mmdet"
+    MMDET_PORT           = "8000"
+    TRANSCODE            = "local"
+    UPLOAD_BLOB          = "True"
+    PLAYBACK_SERVER_HOST = "localhost"
+    PLAYBACK_SERVER_PORT = "5000"
   }
 }
 
@@ -164,7 +168,7 @@ resource "null_resource" "download_chart" {
 }
 
 resource "helm_release" "this" {
-  name       = "observ-edge-${terraform.workspace}"
+  name       = local.helm_release
   repository = local.helm_export_path
   chart      = local.helm_chart_name
   namespace  = kubernetes_namespace.this.metadata[0].name

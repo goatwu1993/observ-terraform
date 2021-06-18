@@ -1,10 +1,10 @@
 resource "azurerm_storage_container" "this" {
-  name                 = var.storage_container_name
+  name                 = local.storage_container_name
   storage_account_name = data.azurerm_storage_account.this.name
 }
 
 resource "azurerm_postgresql_firewall_rule" "this" {
-  name                = var.az_pg_firewall_rule_name
+  name                = local.az_pg_firewall_rule_name
   resource_group_name = data.azurerm_postgresql_server.this.resource_group_name
   server_name         = data.azurerm_postgresql_server.this.name
   start_ip_address    = jsondecode(data.http.my_public_ip.body).ip
@@ -12,7 +12,7 @@ resource "azurerm_postgresql_firewall_rule" "this" {
 }
 
 resource "azurerm_postgresql_database" "this" {
-  name                = var.az_pg_db_name
+  name                = local.az_pg_db_name
   resource_group_name = data.azurerm_postgresql_server.this.resource_group_name
   server_name         = data.azurerm_postgresql_server.this.name
   charset             = "UTF8"
@@ -23,7 +23,7 @@ resource "azurerm_postgresql_database" "this" {
 }
 
 resource "postgresql_role" "this" {
-  name                = var.az_pg_db_username
+  name                = local.az_pg_db_username
   login               = true
   password            = var.az_pg_db_password
   skip_reassign_owned = true
@@ -48,9 +48,11 @@ resource "postgresql_extension" "pgcrypto" {
   drop_cascade = true
 }
 
+# TODO: replace workspace with suffix
+
 resource "kubernetes_namespace" "this" {
   metadata {
-    name = var.namespace
+    name = local.namespace
   }
 
   # Error occurs if terraform try to drop database while any pod still connect to it
@@ -97,7 +99,7 @@ resource "null_resource" "download_chart" {
 }
 
 resource "helm_release" "this" {
-  name       = var.helm_release_name
+  name       = local.helm_release_name
   repository = local.helm_export_path
   chart      = local.helm_chart_name
   namespace  = kubernetes_namespace.this.metadata[0].name
@@ -147,22 +149,22 @@ resource "helm_release" "this" {
   }
 
   set {
-    name  = "web.admin.email"
+    name  = "observ.web.admin.email"
     value = var.web_admin_email
   }
 
   set {
-    name  = "web.admin.password"
+    name  = "observ.web.admin.password"
     value = var.web_admin_password
   }
 
   set {
-    name  = "web.fcmApiKey"
+    name  = "observ.web.fcmApiKey"
     value = var.web_fcm_api_key
   }
 
   set {
-    name  = "web.secretKey"
+    name  = "observ.web.secretKey"
     value = var.web_secret_key
   }
 
@@ -193,17 +195,17 @@ resource "helm_release" "this" {
 
   set {
     name  = "message.azure.eventhub.name"
-    value = var.eventhub_name
+    value = data.azurerm_eventhub.this.name
   }
 
   set {
     name  = "message.azure.eventhub.consumerGroup"
-    value = var.eventhub_consumer_group
+    value = data.azurerm_eventhub_consumer_group.this.name
   }
 
   set {
     name  = "message.azure.eventhub.connectionString"
-    value = var.eventhub_connection_string
+    value = data.azurerm_eventhub_authorization_rule.this.primary_connection_string
   }
 
   set {

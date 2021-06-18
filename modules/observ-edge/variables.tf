@@ -1,3 +1,12 @@
+variable "suffix" {
+  description = "Suffix of all resources"
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9a-z]+$", var.suffix))
+    error_message = "For the suffix value only a-z and 0-9 are allowed."
+  }
+}
+
 variable "image_tag" {
   description = "Tag of this project"
   type        = string
@@ -20,11 +29,6 @@ variable "cr_password" {
 
 variable "ams_account_rg" {
   description = "Resource group of Azure media service account"
-  type        = string
-}
-
-variable "ams_account_name" {
-  description = "Name of Azure media service account"
   type        = string
 }
 
@@ -63,13 +67,23 @@ variable "iothub_connection_string" {
   type        = string
 }
 
-variable "eventhub_name" {
-  description = "EventHub name"
+variable "eventhub_namespace" {
+  description = "EventHub namespace"
   type        = string
 }
 
-variable "eventhub_connection_string" {
-  description = "EventHub Connection String"
+variable "eventhub_namespace_rg" {
+  description = "Resource group of EventHub namespace"
+  type        = string
+}
+
+variable "eventhub" {
+  description = "Name of EventHub"
+  type        = string
+}
+
+variable "eventhub_authorization_rule" {
+  description = "Name of EventHub Authorization Rule"
   type        = string
 }
 

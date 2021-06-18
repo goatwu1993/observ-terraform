@@ -25,7 +25,7 @@ resource "azurerm_eventhub_namespace" "this" {
 }
 
 resource "azurerm_eventhub" "this" {
-  name                = local.eventhub_name
+  name                = local.eventhub
   namespace_name      = azurerm_eventhub_namespace.this.name
   resource_group_name = azurerm_eventhub_namespace.this.resource_group_name
   partition_count     = 2
@@ -41,7 +41,7 @@ resource "azurerm_eventhub_consumer_group" "this" {
 }
 
 resource "azurerm_eventhub_authorization_rule" "this" {
-  name                = local.eventhub_auth_rule_name
+  name                = local.eventhub_authorization_rule
   namespace_name      = azurerm_eventhub_namespace.this.name
   eventhub_name       = azurerm_eventhub.this.name
   resource_group_name = azurerm_eventhub_namespace.this.resource_group_name
@@ -49,7 +49,6 @@ resource "azurerm_eventhub_authorization_rule" "this" {
   send                = true
   manage              = false
 }
-
 module "observ_cloud_infra" {
   source                  = "./../../modules/observ-cloud-infra/"
   rg_name                 = azurerm_resource_group.this.name
@@ -84,10 +83,10 @@ module "observ_cloud_ingress_controller" {
 }
 
 module "observ_cloud" {
-  source            = "./../../modules/observ-cloud/"
-  namespace         = local.namespace
-  helm_release_name = local.cloud_helm_release_name
-  image_tag         = var.image_tag
+  source = "./../../modules/observ-cloud/"
+
+  suffix    = var.suffix
+  image_tag = var.image_tag
   # DNS
   dns = trimsuffix(module.observ_cloud_ingress_controller.fqdn, ".")
   # Contianer registry
@@ -95,24 +94,22 @@ module "observ_cloud" {
   cr_username = var.cr_username
   cr_password = var.cr_password
   # Storage
-  storage_account_rg     = azurerm_resource_group.this.name
-  storage_account_name   = local.storage_account_name
-  storage_container_name = local.storage_container_name
+  storage_account_rg   = azurerm_resource_group.this.name
+  storage_account_name = local.storage_account_name
   # IotHub
   iothub_rg        = azurerm_resource_group.this.name
   iothub_name      = local.iothub_name
   iothub_device_id = module.iot_edge.device_id
   # EventHub
-  eventhub_connection_string = azurerm_eventhub_authorization_rule.this.primary_connection_string
-  eventhub_consumer_group    = azurerm_eventhub_consumer_group.this.name
-  eventhub_name              = azurerm_eventhub.this.name
+  eventhub_namespace_rg       = azurerm_eventhub_namespace.this.resource_group_name
+  eventhub_namespace          = azurerm_eventhub_namespace.this.name
+  eventhub                    = azurerm_eventhub.this.name
+  eventhub_consumer_group     = azurerm_eventhub_consumer_group.this.name
+  eventhub_authorization_rule = azurerm_eventhub_authorization_rule.this.name
   # Postgres
-  az_pg_server_rg          = azurerm_resource_group.this.name
-  az_pg_server             = module.observ_cloud_infra.az_pg_server
-  az_pg_db_name            = local.az_pg_db_name
-  az_pg_db_username        = local.az_pg_db_username
-  az_pg_db_password        = local.az_pg_db_password
-  az_pg_firewall_rule_name = local.az_pg_firewall_rule_name
+  az_pg_server_rg   = azurerm_resource_group.this.name
+  az_pg_server      = module.observ_cloud_infra.az_pg_server
+  az_pg_db_password = var.pg_db_password
   # Web Server
   web_admin_email    = var.web_admin_email
   web_admin_password = var.web_admin_password
@@ -177,26 +174,28 @@ module "iot_edge" {
 module "observ_edge" {
   source = "./../../modules/observ-edge/"
   # AMS
-  ams_account_name         = local.ams_account_name
+  suffix                   = var.suffix
   ams_account_rg           = azurerm_resource_group.this.name
   ams_storage_account_rg   = azurerm_storage_account.this.resource_group_name
   ams_storage_account_name = azurerm_storage_account.this.name
-  tags                     = var.tags
   # IotHub
   iothub_device_id         = module.iot_edge.device_id
   iothub_connection_string = module.iot_edge.connection_string
   # EventHub
-  eventhub_name              = azurerm_eventhub.this.name
-  eventhub_connection_string = azurerm_eventhub_authorization_rule.this.primary_connection_string
-  image_tag                  = var.image_tag
-  # Contianer registry
+  eventhub_namespace_rg       = azurerm_eventhub_namespace.this.resource_group_name
+  eventhub_namespace          = azurerm_eventhub_namespace.this.name
+  eventhub                    = azurerm_eventhub.this.name
+  eventhub_authorization_rule = azurerm_eventhub_authorization_rule.this.name
+  # Contianer
   cr_server   = var.cr_server
   cr_username = var.cr_username
   cr_password = var.cr_password
+  image_tag   = var.image_tag
   # Web Server
   web_host           = trimsuffix(module.observ_cloud_ingress_controller.fqdn, ".")
   web_admin_password = var.web_admin_password
   web_admin_email    = var.web_admin_email
+  tags               = var.tags
 
   providers = {
     helm       = helm.edge
