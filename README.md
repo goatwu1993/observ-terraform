@@ -18,7 +18,7 @@ cd observ-terraform/setups/observ-compose
 
 terraform init
 
-terraform plan -var="image_tag=1.4.0" -out=out.tfplan
+terraform plan -var="image_tag=1.5.0" -out=out.tfplan
 
 ... (input some information)
 
