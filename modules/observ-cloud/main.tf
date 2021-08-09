@@ -110,6 +110,21 @@ resource "helm_release" "this" {
   }
 
   set {
+    name  = "ice_uri"
+    value = var.ice_uri
+  }
+
+  set {
+    name  = "ice_user"
+    value = var.ice_user
+  }
+
+  set {
+    name  = "ice_password"
+    value = var.ice_password
+  }
+
+  set {
     name  = "image.tag"
     value = var.image_tag
   }
@@ -149,6 +164,11 @@ resource "helm_release" "this" {
   }
 
   set {
+    name  = "observ.web.edition"
+    value = var.web_edition
+  }
+
+  set {
     name  = "observ.web.admin.email"
     value = var.web_admin_email
   }
@@ -164,8 +184,23 @@ resource "helm_release" "this" {
   }
 
   set {
+    name  = "observ.web.sendGrid.apiKey"
+    value = var.web_sendgrid_api_key
+  }
+
+  set {
     name  = "observ.web.secretKey"
     value = var.web_secret_key
+  }
+
+ set {
+    name  = "observ.web.hostUrl"
+    value = var.web_host_url
+  }
+
+ set {
+    name  = "observ.web.emailLang"
+    value = var.web_email_lang
   }
 
   set {
@@ -206,6 +241,21 @@ resource "helm_release" "this" {
   set {
     name  = "message.azure.eventhub.connectionString"
     value = data.azurerm_eventhub_authorization_rule.this.primary_connection_string
+  }
+
+  set {
+    name  = "message.eventhubType"
+    value = var.eventhub_type
+  }
+
+  set {
+    name  = "message.mqttTopic"
+    value = var.mqtt_topic
+  }
+
+  set {
+    name  = "message.mqttBroker"
+    value = var.mqtt_broker
   }
 
   set {

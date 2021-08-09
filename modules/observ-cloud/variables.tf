@@ -17,6 +17,21 @@ variable "dns" {
   type        = string
 }
 
+variable "ice_uri" {
+  description = "ICE server URI of this project"
+  type        = string
+}
+
+variable "ice_user" {
+  description = "ICE server user of this project"
+  type        = string
+}
+
+variable "ice_password" {
+  description = "ICE server password of this project"
+  type        = string
+}
+
 variable "web_admin" {
   description = "Admin email and password"
 
@@ -37,6 +52,21 @@ variable "web_secret_key" {
 
 variable "web_fcm_api_key" {
   description = "Web server FCM api key"
+  type        = string
+}
+
+variable "web_sendgrid_api_key" {
+  description = "Web server SendGrid api key"
+  type        = string
+}
+
+variable "web_host_url" {
+  description = "Web server host url (used in Email)"
+  type        = string
+}
+
+variable "web_email_lang" {
+  description = "Web email language (en or zh)"
   type        = string
 }
 
@@ -128,6 +158,29 @@ variable "linebot_access_token" {
 
 variable "linebot_channel_secret" {
   description = "Linebot channel secret"
+  type        = string
+  default     = ""
+}
+
+variable "web_edition" {
+  description = "Web server edition"
+  type        = string
+}
+
+variable "eventhub_type" {
+  description = "eventhub type"
+  type        = string
+  default     = ""
+}
+
+variable "mqtt_topic" {
+  description = "mqtt topic"
+  type        = string
+  default     = ""
+}
+
+variable "mqtt_broker" {
+  description = "mqtt broker"
   type        = string
   default     = ""
 }

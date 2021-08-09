@@ -89,6 +89,10 @@ module "observ_cloud" {
   image_tag = var.image_tag
   # DNS
   dns = trimsuffix(module.observ_cloud_ingress_controller.fqdn, ".")
+  # ICE server
+  ice_uri = var.ice_uri
+  ice_user = var.ice_user
+  ice_password = var.ice_password
   # Contianer registry
   cr_server   = var.cr_server
   cr_username = var.cr_username
@@ -106,15 +110,23 @@ module "observ_cloud" {
   eventhub                    = azurerm_eventhub.this.name
   eventhub_consumer_group     = azurerm_eventhub_consumer_group.this.name
   eventhub_authorization_rule = azurerm_eventhub_authorization_rule.this.name
+  eventhub_type               = var.eventhub_type
+  mqtt_topic                  = var.mqtt_topic
+  mqtt_broker                 = var.mqtt_broker
   # Postgres
   az_pg_server_rg   = azurerm_resource_group.this.name
   az_pg_server      = module.observ_cloud_infra.az_pg_server
   az_pg_db_password = var.pg_db_password
   # Web Server
-  web_admin_email    = var.web_admin_email
-  web_admin_password = var.web_admin_password
-  web_secret_key     = local.web_secret_key
-  web_fcm_api_key    = var.web_fcm_api_key
+  web_edition          = var.web_edition
+  web_admin_email      = var.web_admin_email
+  web_admin_password   = var.web_admin_password
+  web_secret_key       = local.web_secret_key
+  web_fcm_api_key      = var.web_fcm_api_key
+  web_sendgrid_api_key = var.web_sendgrid_api_key
+  web_host_url         = var.web_host_url
+  web_email_lang       = var.web_email_lang
+
   # Linebot
   linebot_channel_secret = var.linebot_channel_secret
   linebot_access_token   = var.linebot_access_token

@@ -61,7 +61,6 @@ resource "kubernetes_secret" "ams" {
     AMS_ACCOUNT_NAME             = azurerm_media_services_account.this.name
     AMS_RESOURCE_GROUP_NAME      = azurerm_media_services_account.this.resource_group_name
     AM_STORAGE_CONNECTION_STRING = data.azurerm_storage_account.this.primary_connection_string
-    AM_STORAGE_ACCOUNT_KEY       = data.azurerm_storage_account.this.primary_access_key
     AM_STORAGE_ACCOUNT_NAME      = data.azurerm_storage_account.this.name
     AMS_ENCODER_PRESET_NAME      = "H264SingleBitrate720p"
     AMS_STREAM_POLICY_NAME       = "Predefined_ClearStreamingOnly"
