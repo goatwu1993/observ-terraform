@@ -58,7 +58,7 @@ variable "pg_db_password" {
 variable "image_tag" {
   description = "Tag of this project"
   type        = string
-  default     = "1.5.0"
+  default     = "1.7.0"
 }
 
 variable "web_admin_email" {
@@ -119,6 +119,65 @@ variable "linebot_access_token" {
 
 variable "linebot_channel_secret" {
   description = "Linebot channel secret"
+  type        = string
+  default     = ""
+}
+
+variable "web_edition" {
+  description = "Web server edition"
+  type        = string
+  default     = "community"
+}
+
+variable "eventhub_type" {
+  description = "eventhub type"
+  type        = string
+  default     = ""
+}
+
+variable "mqtt_topic" {
+  description = "mqtt topic"
+  type        = string
+  default     = ""
+}
+
+variable "mqtt_broker" {
+  description = "mqtt broker"
+  type        = string
+  default     = ""
+}
+
+variable "web_sendgrid_api_key" {
+  description = "Web server SendGrid api key"
+  type        = string
+}
+
+variable "web_host_url" {
+  description = "Web server host url (used in Email), maybe can replace by dns"
+  type        = string
+  default     = ""
+}
+
+variable "web_email_lang" {
+  description = "Web email language (en or zh)"
+  type        = string
+  default     = "en"
+}
+
+variable "ice_uri" {
+  description = "ICE server URI of this project"
+  type        = string
+  default     = "stun:stun.l.google.com:19302"
+}
+
+variable "ice_user" {
+  description = "ICE server user of this project"
+  type        = string
+  default     = ""
+}
+
+variable "ice_password" {
+  description = "ICE server password of this project"
   type        = string
   default     = ""
 }

@@ -20,16 +20,19 @@ variable "dns" {
 variable "ice_uri" {
   description = "ICE server URI of this project"
   type        = string
+  default     = "stun:stun.l.google.com:19302"
 }
 
 variable "ice_user" {
   description = "ICE server user of this project"
   type        = string
+  default     = ""
 }
 
 variable "ice_password" {
   description = "ICE server password of this project"
   type        = string
+  default     = ""
 }
 
 variable "web_admin" {
@@ -61,13 +64,15 @@ variable "web_sendgrid_api_key" {
 }
 
 variable "web_host_url" {
-  description = "Web server host url (used in Email)"
+  description = "Web server host url (used in Email), maybe can replace by dns"
   type        = string
+  default     = ""
 }
 
 variable "web_email_lang" {
   description = "Web email language (en or zh)"
   type        = string
+  default     = "en"
 }
 
 variable "storage_account_rg" {
@@ -165,6 +170,7 @@ variable "linebot_channel_secret" {
 variable "web_edition" {
   description = "Web server edition"
   type        = string
+  default     = "community"
 }
 
 variable "eventhub_type" {
