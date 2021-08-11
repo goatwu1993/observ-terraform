@@ -87,6 +87,24 @@ variable "eventhub_authorization_rule" {
   type        = string
 }
 
+variable "eventhub_type" {
+  description = "eventhub type"
+  type        = string
+  default     = ""
+}
+
+variable "mqtt_topic" {
+  description = "mqtt topic"
+  type        = string
+  default     = ""
+}
+
+variable "mqtt_broker" {
+  description = "mqtt broker"
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "Default tags of all resources"
   type = object({
