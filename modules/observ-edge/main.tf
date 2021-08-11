@@ -64,7 +64,6 @@ resource "kubernetes_secret" "ams" {
     AM_STORAGE_ACCOUNT_NAME      = data.azurerm_storage_account.this.name
     AMS_ENCODER_PRESET_NAME      = "H264SingleBitrate720p"
     AMS_STREAM_POLICY_NAME       = "Predefined_ClearStreamingOnly"
-
   }
   type = "Opaque"
 }
@@ -91,6 +90,9 @@ resource "kubernetes_secret" "eventhub" {
   data = {
     EVENTHUB_NAME              = data.azurerm_eventhub.this.name
     EVENTHUB_CONNECTION_STRING = data.azurerm_eventhub_authorization_rule.this.primary_connection_string
+    EVENTHUB_TYPE              = var.eventhub_type
+    MQTT_TOPIC                 = var.mqtt_topic
+    MQTT_BROKER                = var.mqtt_broker
   }
   type = "Opaque"
 }
@@ -104,11 +106,6 @@ resource "kubernetes_config_map" "stream_agent" {
   data = {
     DEEPSTREAM           = "False"
     WS_PATH              = "webrtc-server"
-    CENTERNET_HOST       = "triton-server-centernet"
-    CENTERNET_PORT       = "8000"
-    MMDET_HOST           = "triton-server-mmdet"
-    MMDET_PORT           = "8000"
-    TRANSCODE            = "local"
     UPLOAD_BLOB          = "True"
     PLAYBACK_SERVER_HOST = "localhost"
     PLAYBACK_SERVER_PORT = "5000"
