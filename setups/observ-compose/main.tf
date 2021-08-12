@@ -10,6 +10,7 @@ resource "azurerm_storage_account" "this" {
   location                 = azurerm_resource_group.this.location
   account_tier             = "Standard"
   account_replication_type = "GRS"
+  allow_blob_public_access = true
 
   tags = var.tags
 }
