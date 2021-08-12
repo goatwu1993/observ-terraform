@@ -75,6 +75,36 @@ variable "web_email_lang" {
   default     = "en"
 }
 
+variable "web_kubeflow_host" {
+  description = "Kubeflow host URL"
+  type        = string
+  default     = ""
+}
+
+variable "web_kubeflow_pipeline_name" {
+  description = "Kubeflow pipeline name"
+  type        = string
+  default     = ""
+}
+
+variable "web_kubeflow_pipeline_version_name" {
+  description = "Kubeflow pipeline version name"
+  type        = string
+  default     = ""
+}
+
+variable "web_kubeflow_experiment_name" {
+  description = "Kubeflow pipeline experiment name"
+  type        = string
+  default     = ""
+}
+
+variable "web_kubeflow_experiment_namespace" {
+  description = "Kubeflow pipeline experiment name"
+  type        = string
+  default     = ""
+}
+
 variable "storage_account_rg" {
   description = "Resource group of storage account"
   type        = string
