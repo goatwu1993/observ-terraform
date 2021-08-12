@@ -203,6 +203,31 @@ resource "helm_release" "this" {
     value = var.web_email_lang
   }
 
+ set {
+    name  = "observ.web.kubeflow.host"
+    value = var.web_kubeflow_host
+  }
+
+ set {
+    name  = "observ.web.kubeflow.pipelineName"
+    value = var.web_kubeflow_pipeline_name
+  }
+
+ set {
+    name  = "observ.web.kubeflow.pipelineVersionName"
+    value = var.web_kubeflow_pipeline_version_name
+  }
+
+ set {
+    name  = "observ.web.kubeflow.experimentName"
+    value = var.web_kubeflow_experiment_name
+  }
+
+ set {
+    name  = "observ.web.kubeflow.experimentNamespace"
+    value = var.web_kubeflow_experiment_namespace
+  }
+
   set {
     name  = "storage.azure.storageAccount"
     value = data.azurerm_storage_account.this.name

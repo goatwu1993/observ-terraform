@@ -127,6 +127,11 @@ module "observ_cloud" {
   web_sendgrid_api_key = var.web_sendgrid_api_key
   web_host_url         = var.web_host_url
   web_email_lang       = var.web_email_lang
+  web_kubeflow_host                  = var.web_kubeflow_host
+  web_kubeflow_pipeline_name         = var.web_kubeflow_pipeline_name
+  web_kubeflow_pipeline_version_name = var.web_kubeflow_pipeline_version_name
+  web_kubeflow_experiment_name       = var.web_kubeflow_experiment_name
+  web_kubeflow_experiment_namespace  = var.web_kubeflow_experiment_namespace
 
   # Linebot
   linebot_channel_secret = var.linebot_channel_secret
